@@ -1,20 +1,45 @@
 <script setup>
+import { ref } from 'vue';
+import NavItem from './NavItem.vue';
+import { PAGE_ACTIVITIES, PAGE_TIMELINE, PAGE_PROGRESS } from '@/constants';
 import { ClockIcon, ListBulletIcon, ChartBarIcon } from '@heroicons/vue/24/outline';
 
-const navItems = ['timeline', 'activities', 'progress'];
+const navItems = {
+  [PAGE_TIMELINE]: ClockIcon,
+  [PAGE_ACTIVITIES]: ListBulletIcon,
+  [PAGE_PROGRESS]: ChartBarIcon,
+};
+
+const currentPage = ref(normalizerPageHash());
+
+function normalizerPageHash() {
+  const hash = window.location.hash.slice(1);
+
+  if (Object.keys(navItems).includes(hash)) {
+    return hash;
+  }
+
+  window.location.hash = PAGE_TIMELINE;
+
+  return PAGE_TIMELINE;
+}
+
+function toggleActiveClass(page) {
+  currentPage.value = page;
+}
 </script>
 
 <template>
   <nav class="sticky bottom-0 bg-white z-20 border-t">
     <ul class="flex items-center justify-around">
-      <li v-for="page in navItems" :key="page" class="flex-1">
-        <a :href="`#${page}`" class="flex flex-col items-center text-xs p-2 capitalize">
-          <ClockIcon v-if="page === 'timeline'" class="w-6 h-6" />
-          <ListBulletIcon v-else-if="page === 'activities'" class="w-6 h-6" />
-          <ChartBarIcon v-else class="w-6 h-6" />
-          {{ page }}
-        </a>
-      </li>
+      <NavItem
+        v-for="(icon, page) in navItems"
+        :key="page"
+        :href="`#${page}`"
+        :class="{ 'bg-gray-200 pointer-events-none': page === currentPage }"
+        @click="toggleActiveClass(page)"
+        ><component :is="icon" class="w-6 h-6" /> {{ page }}
+      </NavItem>
     </ul>
   </nav>
 </template>
