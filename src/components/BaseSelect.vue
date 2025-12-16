@@ -3,15 +3,29 @@ import BaseButton from './BaseButton.vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 
 const { options, placeholder } = defineProps({
-  placeholder: String,
-  selected: Number,
-  options: Object,
+  placeholder: {
+    required: true,
+    type: String,
+  },
+  selected: {
+    required: true,
+    type: Number,
+  },
+  options: {
+    required: true,
+    type: Array,
+    validator(options) {
+      return options.every(
+        ({ value, label }) => typeof value === 'number' && typeof label === 'string',
+      );
+    },
+  },
 });
 </script>
 
 <template>
   <BaseButton>
-    <component :is="XMarkIcon" />
+    <XMarkIcon class="h-8" />
   </BaseButton>
   <select class="w-full truncate rounded bg-gray-100 py-1 px-2 text-2xl">
     <option selected disabled value="">{{ placeholder }}</option>

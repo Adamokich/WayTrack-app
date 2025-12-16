@@ -12,7 +12,7 @@ const currentPage = ref(normalizerPageHash());
 const timelineItems = generateTimelineItems();
 
 function goToPage(page) {
-  return page === '#timiline'
+  return page === '#timeline'
     ? (currentPage.value = PAGE_TIMELINE)
     : (currentPage.value = PAGE_PROGRESS);
 }

@@ -1,8 +1,15 @@
 <script setup>
+import { HOURS_IN_DAY } from '@/constants';
 import BaseSelect from './BaseSelect.vue';
 
 const { timelineItem } = defineProps({
-  timelineItem: Object,
+  timelineItem: {
+    required: true,
+    type: Object,
+    validator({ hour }) {
+      return typeof hour === 'number' && hour >= 0 && hour <= HOURS_IN_DAY;
+    },
+  },
 });
 
 const hourLinkClasses = [
