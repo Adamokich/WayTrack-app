@@ -10,6 +10,7 @@ import { normalizerPageHash, generateTimelineItems } from './functions';
 
 const currentPage = ref(normalizerPageHash());
 const timelineItems = generateTimelineItems();
+const activities = ['Coding', 'Reading', 'Training'];
 
 function goToPage(page) {
   currentPage.value = page;
@@ -20,7 +21,7 @@ function goToPage(page) {
   <TheHeader @navigate="goToPage" />
   <main class="grow flex flex-col">
     <TheTimeLine v-show="currentPage === PAGE_TIMELINE" :timeline-items="timelineItems" />
-    <TheActivities v-show="currentPage === PAGE_ACTIVITIES" />
+    <TheActivities v-show="currentPage === PAGE_ACTIVITIES" :activities="activities" />
     <TheProgress v-show="currentPage === PAGE_PROGRESS" />
   </main>
   <TheNavigation :current-page="currentPage" @navigate="goToPage" />
