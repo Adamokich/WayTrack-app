@@ -12,18 +12,16 @@ const currentPage = ref(normalizerPageHash());
 const timelineItems = generateTimelineItems();
 
 function goToPage(page) {
-  return page === '#timeline'
-    ? (currentPage.value = PAGE_TIMELINE)
-    : (currentPage.value = PAGE_PROGRESS);
+  currentPage.value = page;
 }
 </script>
 
 <template>
-  <TheHeader @go-to-page="goToPage($event)" />
+  <TheHeader @navigate="goToPage" />
   <main class="grow flex flex-col">
     <TheTimeLine v-show="currentPage === PAGE_TIMELINE" :timeline-items="timelineItems" />
     <TheActivities v-show="currentPage === PAGE_ACTIVITIES" />
     <TheProgress v-show="currentPage === PAGE_PROGRESS" />
   </main>
-  <TheNavigation :current-page="currentPage" @page="currentPage = $event" />
+  <TheNavigation :current-page="currentPage" @navigate="goToPage" />
 </template>
