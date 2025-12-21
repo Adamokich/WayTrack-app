@@ -3,6 +3,7 @@ import { validateSelectOptions, isUndefinedOrNull, isNumberOrNull } from '@/vali
 import BaseButton from './BaseButton.vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { computed } from 'vue';
+import { BUTTON_TYPE_NEUTRAL } from '@/constants';
 
 const emit = defineEmits({
   select: isNumberOrNull,
@@ -25,7 +26,7 @@ const isNotSelected = computed(() => isUndefinedOrNull(selected));
 </script>
 
 <template>
-  <BaseButton @click="emit('select', null)">
+  <BaseButton @click="emit('select', null)" :type="BUTTON_TYPE_NEUTRAL">
     <XMarkIcon class="h-8" />
   </BaseButton>
   <select

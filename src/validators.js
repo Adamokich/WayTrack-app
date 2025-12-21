@@ -40,20 +40,20 @@ export function validateActivities(activities) {
   return activities.every((activity) => isActivityValid(activity));
 }
 
+export function isUndefined(value) {
+  return value === undefined;
+}
+
 function isNotEmptyString(value) {
   return isString(value) && value.length > 0;
 }
 
 function isSelectOptionValid({ value, label }) {
-  return isNumber(value) && isString(label);
+  return isNumber(value) && isNotEmptyString(label);
 }
 
 function isNull(value) {
   return value === null;
-}
-
-function isUndefined(value) {
-  return value === undefined;
 }
 
 function isNumber(value) {

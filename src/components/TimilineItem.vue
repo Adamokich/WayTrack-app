@@ -1,33 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 import BaseSelect from './BaseSelect.vue';
-import { isTimeLineItemValid } from '@/validators';
+import { isTimeLineItemValid, validateSelectOptions } from '@/validators';
 import TimelineHour from './TimelineHour.vue';
 
-const { timelineItem } = defineProps({
+const { timelineItem, activitySelectOptions } = defineProps({
   timelineItem: {
     required: true,
     type: Object,
     validator: isTimeLineItemValid,
   },
+  activitySelectOptions: {
+    required: true,
+    type: Array,
+    validator: validateSelectOptions,
+  },
 });
 
-const options = [
-  {
-    value: 1,
-    label: 'Reading',
-  },
-  {
-    value: 2,
-    label: 'Training',
-  },
-  {
-    value: 3,
-    label: 'Coding',
-  },
-];
-
-const selectedActivityId = ref(2);
+const selectedActivityId = ref(0);
 </script>
 
 <template>
@@ -36,7 +26,7 @@ const selectedActivityId = ref(2);
     <div class="flex gap-2">
       <BaseSelect
         :selected="selectedActivityId"
-        :options="options"
+        :options="activitySelectOptions"
         placeholder="Rest"
         @select="selectedActivityId = $event"
       />

@@ -2,9 +2,13 @@
 import BaseButton from '@/components/BaseButton.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
 import { BUTTON_TYPE_DANGER, PERIOD_SELECT_OPTIONS } from '@/constants';
-import { isActivityValid } from '@/validators';
+import { isActivityValid, isUndefined } from '@/validators';
 import { TrashIcon } from '@heroicons/vue/24/outline';
 import { ref } from 'vue';
+
+const emit = defineEmits({
+  delete: isUndefined,
+});
 
 const { activityItem } = defineProps({
   activityItem: {
@@ -20,7 +24,7 @@ const secondsToComplete = ref(null);
 <template>
   <li class="flex flex-col gap-2 p-4 font-mono">
     <div class="flex items-center gap-2">
-      <BaseButton :type="BUTTON_TYPE_DANGER">
+      <BaseButton @click="emit('delete')" :type="BUTTON_TYPE_DANGER">
         <TrashIcon class="h-8" />
       </BaseButton>
       <span class="truncate text-xl">{{ activityItem }}</span>
