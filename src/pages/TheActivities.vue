@@ -1,10 +1,7 @@
 <script setup>
 import ActivityItem from '@/components/ActivityItem.vue';
-import BaseButton from '@/components/BaseButton.vue';
-import { BUTTON_TYPE_PRIMARY } from '@/constants';
+import TheActivityForm from '@/components/TheActivityForm.vue';
 import { isActivityValid, validateActivities } from '@/validators';
-import { PlusCircleIcon } from '@heroicons/vue/24/outline';
-import { ref } from 'vue';
 
 const emit = defineEmits({
   deleteActivity: isActivityValid,
@@ -18,8 +15,6 @@ const { activities } = defineProps({
     validator: validateActivities,
   },
 });
-
-let newActivity = ref('');
 </script>
 
 <template>
@@ -33,20 +28,6 @@ let newActivity = ref('');
       />
     </ul>
 
-    <form
-      class="sticky bottom-[57px] flex gap-2 border-t bg-white p-4"
-      @submit.prevent="emit('createActivity', newActivity)"
-    >
-      <input
-        class="w-full rounded border px-4 text-xl"
-        type="text"
-        placeholder="ActivityName"
-        :value="newActivity"
-        @input="newActivity = $event.target.value"
-      />
-      <BaseButton :type="BUTTON_TYPE_PRIMARY">
-        <PlusCircleIcon class="h-8" />
-      </BaseButton>
-    </form>
+    <TheActivityForm @submit="emit('createActivity', $event)" />
   </div>
 </template>
