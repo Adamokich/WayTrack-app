@@ -2,23 +2,21 @@
 import BaseButton from '@/components/BaseButton.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
 import { BUTTON_TYPE_DANGER, PERIOD_SELECT_OPTIONS } from '@/constants';
-import { isActivityValid, isUndefined } from '@/validators';
+import { isActivityValid, isNumber, isUndefined } from '@/validators';
 import { TrashIcon } from '@heroicons/vue/24/outline';
-import { ref } from 'vue';
 
 const emit = defineEmits({
   delete: isUndefined,
+  setSecondsToComplete: isNumber,
 });
 
 const { activityItem } = defineProps({
   activityItem: {
     required: true,
-    type: String,
+    type: Object,
     validator: isActivityValid,
   },
 });
-
-const secondsToComplete = ref(null);
 </script>
 
 <template>
@@ -27,14 +25,14 @@ const secondsToComplete = ref(null);
       <BaseButton @click="emit('delete')" :type="BUTTON_TYPE_DANGER">
         <TrashIcon class="h-8" />
       </BaseButton>
-      <span class="truncate text-xl">{{ activityItem }}</span>
+      <span class="truncate text-xl">{{ activityItem.name }}</span>
     </div>
     <div>
       <BaseSelect
-        placeholder="h:mmm"
-        :selected="secondsToComplete"
+        placeholder="hh:mm"
+        :selected="activityItem.secondsToComplete || null"
         :options="PERIOD_SELECT_OPTIONS"
-        @select="secondsToComplete = $event"
+        @select="emit('setSecondsToComplete', $event || 0)"
       />
     </div>
   </li>
