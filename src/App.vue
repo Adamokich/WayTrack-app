@@ -57,10 +57,12 @@ function updateTimelineActivitySeconds(seconds, timelineItem) {
 
 provide('updateTimelineItemActivitySeconds', updateTimelineActivitySeconds);
 provide('timelineItems', timelineItems.value);
-provide('activities', activities.value);
 provide('activitySelectOptions', activitySelectOptions.value);
 provide('periodSelectOptions', generatePeriodSelectOptions());
 provide('setTimelineItemActivity', setTimelineItemActivity);
+provide('setActivitySecondsToComplete', setActivitySecondsToComplete);
+provide('createActivityItem', createActivityItem);
+provide('deleteActivityItem', deleteActivityItem);
 </script>
 
 <template>
@@ -72,13 +74,7 @@ provide('setTimelineItemActivity', setTimelineItemActivity);
       :current-page="currentPage"
       ref="timeline"
     />
-    <TheActivities
-      v-show="currentPage === PAGE_ACTIVITIES"
-      :activities="activities"
-      @delete-activity="deleteActivityItem"
-      @create-activity="createActivityItem"
-      @set-activity-seconds-to-complete="setActivitySecondsToComplete"
-    />
+    <TheActivities v-show="currentPage === PAGE_ACTIVITIES" :activities="activities" />
     <TheProgress v-show="currentPage === PAGE_PROGRESS" />
   </main>
   <TheNavigation :current-page="currentPage" @navigate="goToPage" />

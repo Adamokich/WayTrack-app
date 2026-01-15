@@ -2,16 +2,13 @@
 import BaseButton from '@/components/BaseButton.vue';
 import { BUTTON_TYPE_PRIMARY } from '@/constants';
 import { id } from '@/functions';
-import { isActivityValid } from '@/validators';
 import { PlusCircleIcon } from '@heroicons/vue/24/outline';
-import { nextTick, ref } from 'vue';
+import { inject, nextTick, ref } from 'vue';
 
-const emit = defineEmits({
-  submit: isActivityValid,
-});
+const createActivityItem = inject('createActivityItem');
 
 async function submit() {
-  emit('submit', {
+  createActivityItem({
     name: activityName.value,
     id: id(),
     secondsToComplete: 0,
