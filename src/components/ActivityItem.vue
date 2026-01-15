@@ -1,9 +1,11 @@
 <script setup>
 import BaseButton from '@/components/BaseButton.vue';
 import BaseSelect from '@/components/BaseSelect.vue';
-import { BUTTON_TYPE_DANGER, PERIOD_SELECT_OPTIONS } from '@/constants';
+import { BUTTON_TYPE_DANGER } from '@/constants';
 import { isActivityValid, isNumber, isUndefined } from '@/validators';
 import { TrashIcon } from '@heroicons/vue/24/outline';
+import ActivitySecondsToComplete from './ActivitySecondsToComplete.vue';
+import { inject } from 'vue';
 
 const emit = defineEmits({
   delete: isUndefined,
@@ -17,6 +19,8 @@ const { activityItem } = defineProps({
     validator: isActivityValid,
   },
 });
+
+const periodSelectOptions = inject('periodSelectOptions');
 </script>
 
 <template>
@@ -27,13 +31,14 @@ const { activityItem } = defineProps({
       </BaseButton>
       <span class="truncate text-xl">{{ activityItem.name }}</span>
     </div>
-    <div>
+    <div class="flex gap-2">
       <BaseSelect
         placeholder="hh:mm"
         :selected="activityItem.secondsToComplete || null"
-        :options="PERIOD_SELECT_OPTIONS"
+        :options="periodSelectOptions"
         @select="emit('setSecondsToComplete', $event || 0)"
       />
+      <ActivitySecondsToComplete v-if="activityItem.secondsToComplete" :activity="activityItem" />
     </div>
   </li>
 </template>

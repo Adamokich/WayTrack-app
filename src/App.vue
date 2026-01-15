@@ -5,18 +5,21 @@ import TheNavigation from './components/TheNavigation.vue';
 import TheActivities from './pages/TheActivities.vue';
 import TheProgress from './pages/TheProgress.vue';
 import TheTimeLine from './pages/TheTimeLine.vue';
-import { computed, ref } from 'vue';
+import { computed, provide, ref, useTemplateRef } from 'vue';
 import {
   normalizerPageHash,
   generateTimelineItems,
   generateActivitySelectOptions,
   generateActivities,
+  generatePeriodSelectOptions,
 } from './functions';
 
 const currentPage = ref(normalizerPageHash());
-const timelineItems = ref(generateTimelineItems());
 const activities = ref(generateActivities());
+const timelineItems = ref(generateTimelineItems(activities.value));
 const activitySelectOptions = computed(() => generateActivitySelectOptions(activities.value));
+
+const timeline = useTemplateRef('timeline');
 
 function deleteActivityItem(activity) {
   timelineItems.value.forEach((timelineItem) => {
@@ -33,16 +36,31 @@ function createActivityItem(activity) {
 }
 
 function goToPage(page) {
+  if (page === PAGE_TIMELINE && currentPage.value === PAGE_TIMELINE) timeline.value.scrollToHour();
+
+  if (page === PAGE_ACTIVITIES || page === PAGE_PROGRESS) document.body.scrollIntoView();
+
   currentPage.value = page;
 }
 
-function setTimelineItemActivity(timelineItem, activity) {
-  timelineItem.activityId = activity.id;
+function setTimelineItemActivity(timelineItem, activityId) {
+  timelineItem.activityId = activityId;
 }
 
 function setActivitySecondsToComplete(activity, secondsToComplete) {
   activity.secondsToComplete = secondsToComplete;
 }
+
+function updateTimelineActivitySeconds(seconds, timelineItem) {
+  timelineItem.activitySeconds += seconds;
+}
+
+provide('updateTimelineItemActivitySeconds', updateTimelineActivitySeconds);
+provide('timelineItems', timelineItems.value);
+provide('activities', activities.value);
+provide('activitySelectOptions', activitySelectOptions.value);
+provide('periodSelectOptions', generatePeriodSelectOptions());
+provide('setTimelineItemActivity', setTimelineItemActivity);
 </script>
 
 <template>
@@ -51,9 +69,8 @@ function setActivitySecondsToComplete(activity, secondsToComplete) {
     <TheTimeLine
       v-show="currentPage === PAGE_TIMELINE"
       :timeline-items="timelineItems"
-      :activity-select-options="activitySelectOptions"
-      :activities="activities"
-      @set-timeline-item-activity="setTimelineItemActivity"
+      :current-page="currentPage"
+      ref="timeline"
     />
     <TheActivities
       v-show="currentPage === PAGE_ACTIVITIES"
