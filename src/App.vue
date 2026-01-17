@@ -5,21 +5,18 @@ import TheNavigation from './components/TheNavigation.vue';
 import TheActivities from './pages/TheActivities.vue';
 import TheProgress from './pages/TheProgress.vue';
 import TheTimeLine from './pages/TheTimeLine.vue';
-import { computed, provide, ref, useTemplateRef } from 'vue';
+import { computed, provide, ref } from 'vue';
 import {
-  normalizerPageHash,
   generateTimelineItems,
   generateActivitySelectOptions,
   generateActivities,
   generatePeriodSelectOptions,
 } from './functions';
+import { currentPage } from './router';
 
-const currentPage = ref(normalizerPageHash());
 const activities = ref(generateActivities());
 const timelineItems = ref(generateTimelineItems(activities.value));
 const activitySelectOptions = computed(() => generateActivitySelectOptions(activities.value));
-
-const timeline = useTemplateRef('timeline');
 
 function deleteActivityItem(activity) {
   timelineItems.value.forEach((timelineItem) => {
@@ -33,14 +30,6 @@ function deleteActivityItem(activity) {
 
 function createActivityItem(activity) {
   activities.value.push(activity);
-}
-
-function goToPage(page) {
-  if (page === PAGE_TIMELINE && currentPage.value === PAGE_TIMELINE) timeline.value.scrollToHour();
-
-  if (page === PAGE_ACTIVITIES || page === PAGE_PROGRESS) document.body.scrollIntoView();
-
-  currentPage.value = page;
 }
 
 function setTimelineItemActivity(timelineItem, activityId) {
@@ -66,16 +55,15 @@ provide('deleteActivityItem', deleteActivityItem);
 </script>
 
 <template>
-  <TheHeader @navigate="goToPage" />
+  <TheHeader />
   <main class="grow flex flex-col">
     <TheTimeLine
       v-show="currentPage === PAGE_TIMELINE"
       :timeline-items="timelineItems"
-      :current-page="currentPage"
-      ref="timeline"
+      ref="timelineRef"
     />
     <TheActivities v-show="currentPage === PAGE_ACTIVITIES" :activities="activities" />
     <TheProgress v-show="currentPage === PAGE_PROGRESS" />
   </main>
-  <TheNavigation :current-page="currentPage" @navigate="goToPage" />
+  <TheNavigation />
 </template>

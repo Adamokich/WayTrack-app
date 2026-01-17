@@ -3,23 +3,10 @@ import {
   MIDNIGHT_HOUR,
   MILLISECONDS_IN_SECOND,
   MINUTES_IN_HOUR,
-  PAGE_TIMELINE,
   SECONDS_IN_HOUR,
   SECONDS_IN_MINUTES,
 } from './constants';
-import { isNumberOrNull, isValidPage } from './validators';
-
-export function normalizerPageHash() {
-  const page = window.location.hash.slice(1);
-
-  if (isValidPage(page)) {
-    return page;
-  }
-
-  window.location.hash = PAGE_TIMELINE;
-
-  return PAGE_TIMELINE;
-}
+import { isNumberOrNull } from './validators';
 
 export function normalizerSelectValue(value) {
   return isNumberOrNull(value) || isNaN(value) ? value : +value;
@@ -66,6 +53,7 @@ export function generateActivities() {
 
 export function generatePeriodSelectOptions() {
   const periodInMinutes = [15, 30, 45, 60, 90, 120, 150, 180, 210];
+
   return periodInMinutes.map((periodMinutes) => ({
     value: periodMinutes * SECONDS_IN_MINUTES,
     label: generatePeriodSelectOptionsLabel(periodMinutes),
