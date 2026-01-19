@@ -6,6 +6,7 @@ import {
   BUTTON_TYPE_SUCCESS,
   BUTTON_TYPE_WARNING,
 } from '@/constants';
+import { computed } from 'vue';
 
 const typeClasses = {
   [BUTTON_TYPE_NEUTRAL]: 'bg-gray-100 enable:hover:bg-gray-200',
@@ -19,19 +20,22 @@ const typeClasses = {
 <script setup>
 import { isButtonTypeValid } from '@/validators';
 
-defineProps({
+const { type } = defineProps({
   type: {
     default: BUTTON_TYPE_PRIMARY,
     type: String,
     validator: isButtonTypeValid,
   },
 });
+
+const classes = computed(
+  () =>
+    `${typeClasses[type]} rounded p-3 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer`,
+);
 </script>
 
 <template>
-  <button
-    :class="`${typeClasses[type]} rounded p-3 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer`"
-  >
+  <button :class="classes">
     <slot></slot>
   </button>
 </template>

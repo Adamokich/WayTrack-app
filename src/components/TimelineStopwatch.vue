@@ -8,8 +8,9 @@ import {
 import BaseButton from './BaseButton.vue';
 import { ArrowPathIcon, PauseIcon, PlayIcon } from '@heroicons/vue/24/outline';
 import { isTimeLineItemValid } from '@/validators';
-import { inject, ref } from 'vue';
-import { formatSeconds } from '@/functions';
+import { ref, watch } from 'vue';
+import { currentHour, formatSeconds } from '@/functions';
+import { updateTimelineActivitySeconds } from '@/timeline-items';
 
 const { timelineItem } = defineProps({
   timelineItem: {
@@ -19,29 +20,36 @@ const { timelineItem } = defineProps({
   },
 });
 
-const updateTimelineItemActivitySeconds = inject('updateTimelineItemActivitySeconds');
-
 const seconds = ref(timelineItem.activitySeconds);
 const isRunning = ref(false);
-const isStartButtonDisabled = timelineItem.hour !== new Date().getHours();
+const isStartButtonDisabled = timelineItem.hour !== currentHour();
 
 function start() {
   isRunning.value = setInterval(() => {
-    updateTimelineItemActivitySeconds(1, timelineItem);
+    updateTimelineActivitySeconds(timelineItem.activitySeconds + 1, timelineItem);
     seconds.value++;
   }, MILLISECONDS_IN_SECOND);
 }
 
 function stop() {
-  updateTimelineItemActivitySeconds(-seconds.value, timelineItem);
+  updateTimelineActivitySeconds(-seconds.value, timelineItem);
   clearInterval(isRunning.value);
   isRunning.value = false;
 }
 
 function reset() {
   stop();
+
+  updateTimelineActivitySeconds(timelineItem.activitySeconds - seconds.value, timelineItem);
   seconds.value = 0;
 }
+
+watch(
+  () => timelineItem.activityId,
+  () => {
+    updateTimelineActivitySeconds(timelineItem, seconds.value);
+  },
+);
 </script>
 
 <template>

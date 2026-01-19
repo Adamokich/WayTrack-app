@@ -1,17 +1,10 @@
 <script setup>
 import TimilineItem from '@/components/TimilineItem.vue';
 import { MIDNIGHT_HOUR, PAGE_TIMELINE } from '@/constants';
+import { currentHour } from '@/functions';
 import { currentPage } from '@/router';
-import { validateTimelineItems } from '@/validators';
+import { timelineItems } from '@/timeline-items';
 import { nextTick, useTemplateRef, watchPostEffect } from 'vue';
-
-const { timelineItems } = defineProps({
-  timelineItems: {
-    required: true,
-    type: Array,
-    validator: validateTimelineItems,
-  },
-});
 
 const timelineItemRefs = useTemplateRef('timelineItemRefs');
 
@@ -22,7 +15,7 @@ watchPostEffect(() => {
 async function scrollToHour(hour = null, isSmooth = true) {
   await nextTick();
 
-  hour ??= new Date().getHours();
+  hour ??= currentHour();
 
   const el = hour === MIDNIGHT_HOUR ? document.body : timelineItemRefs.value[hour - 1].$el;
 
@@ -39,7 +32,7 @@ defineExpose({ scrollToHour });
         v-for="timelineItem in timelineItems"
         :key="timelineItem.hour"
         :timeline-item="timelineItem"
-        @scroll-to-hour="scrollToHour"
+        @scroll-to-hour="scrollToHour(timelineItem.hour)"
         ref="timelineItemRefs"
       />
     </ul>

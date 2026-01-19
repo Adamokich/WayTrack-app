@@ -1,11 +1,10 @@
 <script setup>
+import { createActivityItem } from '@/activities';
 import BaseButton from '@/components/BaseButton.vue';
 import { BUTTON_TYPE_PRIMARY } from '@/constants';
 import { id } from '@/functions';
 import { PlusCircleIcon } from '@heroicons/vue/24/outline';
-import { inject, nextTick, ref } from 'vue';
-
-const createActivityItem = inject('createActivityItem');
+import { nextTick, ref } from 'vue';
 
 async function submit() {
   createActivityItem({

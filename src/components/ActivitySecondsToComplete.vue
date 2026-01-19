@@ -1,7 +1,8 @@
 <script setup>
-import { formatSeconds, getTotalActivitySeconds } from '@/functions';
+import { formatSeconds } from '@/functions';
+import { getTotalActivitySeconds } from '@/timeline-items';
 import { isActivityValid } from '@/validators';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 
 const { activity } = defineProps({
   activity: {
@@ -11,8 +12,6 @@ const { activity } = defineProps({
   },
 });
 
-const timelineItems = inject('timelineItems');
-
 const classes = computed(
   () => `flex items-center rounded px-2 font-mono text-neutral-100 ${colorClasses.value}`,
 );
@@ -20,9 +19,7 @@ const colorClasses = computed(() => (secondsDiff.value >= 0 ? 'bg-green-400' : '
 const sign = computed(() => (secondsDiff.value >= 0 ? '+' : '-'));
 const seconds = computed(() => `${sign.value}${formatSeconds(secondsDiff.value)}`);
 
-const secondsDiff = computed(
-  () => getTotalActivitySeconds(activity, timelineItems) - activity.secondsToComplete,
-);
+const secondsDiff = computed(() => getTotalActivitySeconds(activity) - activity.secondsToComplete);
 </script>
 
 <template>
