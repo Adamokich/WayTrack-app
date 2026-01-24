@@ -1,7 +1,11 @@
 import { BUTTON_TYPES, HOURS_IN_DAY, MIDNIGHT_HOUR, NAV_ITEMS } from './constants';
 
 export function isValidPage(currentPage) {
-  return Object.keys(NAV_ITEMS).includes(currentPage);
+  return NAV_ITEMS.some((navItem) => navItem.page === currentPage);
+}
+
+export function isNavItemValid(navItem) {
+  return NAV_ITEMS.includes(navItem);
 }
 
 export function isButtonTypeValid(type) {
